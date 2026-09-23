@@ -1,16 +1,24 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import EventCard from '../components/EventCard.vue'
 import EventService from '../services/EventService.js'
 
+const props = defineProps(["page"])
+
+const page = computed(() => props.page)
+
 const events = ref(null)
 
-onMounted(() => {
-  EventService.getEvents()
+const fetchEvents = () => {
+  EventService.getEvents(2, page.value)
     .then((response) => {
       events.value = response.data;
     })
     .catch((error) => {console.error(error)})
+}
+
+onMounted(() => {
+  fetchEvents()
 })
 </script>
 
